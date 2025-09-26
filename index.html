@@ -45,7 +45,8 @@
       margin: 0 auto;
     }
 
-    .carnaval-figure {
+    /* Imagen flotante como enlace */
+    .carnaval-figure-link {
       position: fixed;
       right: 20px;
       bottom: 20px;
@@ -55,6 +56,7 @@
       cursor: pointer;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      display: block;
     }
 
     @keyframes float {
@@ -164,7 +166,7 @@
     }
 
     @media (max-width: 768px) {
-      .carnaval-figure {
+      .carnaval-figure-link {
         width: 120px;
         right: 10px;
         bottom: 10px;
@@ -180,7 +182,12 @@
     <p>Recicla, Juega, Celebra — Un Carnaval de Negros y Blancos más sostenible</p>
   </header>
 
-  <img src="https://i.postimg.cc/gcXvfcyb/figura.png" alt="Embajador del Carnaval Verde" class="carnaval-figure" id="embajador">
+  <!-- Imagen flotante como enlace al chatbot -->
+  <a href="https://script.google.com/macros/s/AKfycby8nTk4LagCVM_HycM8kjtCObywsg_FkNqhYRFreMaSuhjM8edCpmGMb1DGgkdzsCHwiw/exec" 
+     target="_blank" 
+     class="carnaval-figure-link">
+    <img src="https://i.postimg.cc/WpGFYv1X/personaje.png" alt="Asistente del Carnaval Verde" style="width:100%; display:block;">
+  </a>
 
   <main>
     <section>
@@ -254,7 +261,7 @@
       <h2>¡Participa con la App Móvil!</h2>
       <p>Escanea el código QR o haz clic abajo para usar la app oficial del Carnaval Verde.</p>
       <div id="qrcode"></div>
-      <a href="https://github.com/jbetancourtromo/carnaval-verde-pwa.html" class="btn" id="appLink">Abrir App Móvil</a>
+      <a href="https://jbetancourtromo.github.io/carnavalverde/carnavalverdepwa.html" class="btn" id="appLink">Abrir App Móvil</a>
     </div>
   </main>
 
@@ -264,8 +271,8 @@
   </footer>
 
   <script>
-    // ⚠️ ¡REEMPLAZA ESTA URL POR LA DE TU PWA EN GITHUB PAGES!
-    const appUrl = "https://jbetancourtromo.github.io/carnavalverde/";
+    // URL de tu PWA (ajusta si usas otro hosting)
+    const appUrl = "https://jbetancourtromo.github.io/carnavalverde/carnavalverdepwa.html";
     
     new QRCode(document.getElementById("qrcode"), {
       text: appUrl,
@@ -274,21 +281,12 @@
     });
     document.getElementById("appLink").href = appUrl;
 
+    // Métricas simuladas
     setInterval(() => {
       document.getElementById("botellas").textContent = Math.floor(Math.random() * 5000) + 1000;
       document.getElementById("usuarios").textContent = Math.floor(Math.random() * 1000) + 300;
       document.getElementById("co2").textContent = Math.floor(Math.random() * 2000) + 500;
     }, 5000);
-
-    document.getElementById("embajador").addEventListener("click", () => {
-      const mensajes = [
-        "¡Cada botella que reciclas limpia las calles de Pasto!",
-        "El aluminio se recicla al 100%. ¡No lo tires!",
-        "¿Sabías que el vidrio tarda 4,000 años en degradarse? Pero tú puedes darle una segunda vida.",
-        "¡Gracias por ser parte del Carnaval Verde! 🌱"
-      ];
-      alert(mensajes[Math.floor(Math.random() * mensajes.length)]);
-    });
   </script>
 </body>
 </html>
