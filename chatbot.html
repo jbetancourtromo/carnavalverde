@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chatbot - Carnaval Verde</title>
+  <style>
+    :root {
+      --blanco: #ffffff;
+      --gris-claro: #f8f9fa;
+      --gris: #e9ecef;
+      --azul: #4A90E2;
+      --dorado: #d4af37;
+      --negro: #212529;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--gris-claro);
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .chat-container {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+    }
+
+    header {
+      background: white;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--gris);
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: var(--blanco);
+      padding: 4px;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      color: var(--negro);
+    }
+
+    .messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      line-height: 1.4;
+      position: relative;
+    }
+
+    .user {
+      background: var(--azul);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .bot {
+      background: var(--gris);
+      color: var(--negro);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .input-area {
+      display: flex;
+      padding: 16px;
+      background: white;
+      border-top: 1px solid var(--gris);
+    }
+
+    input {
+      flex: 1;
+      padding: 14px;
+      border: 1px solid var(--gris);
+      border-radius: 30px;
+      outline: none;
+      font-size: 1rem;
+    }
+
+    button {
+      background: var(--dorado);
+      color: white;
+      border: none;
+      width: 50px;
+      border-radius: 50%;
+      margin-left: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .typing {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <header>
+      <img src="https://i.postimg.cc/WpGFYv1X/personaje.png" alt="CarnavalBot" class="logo">
+      <h1>💬 CarnavalBot</h1>
+      <p>Pregúntame sobre el carnaval, reciclaje o puntos</p>
+    </header>
+
+    <div class="messages" id="messages">
+      <div class="message bot">¡Hola! Soy tu asistente del Carnaval Verde. ¿En qué puedo ayudarte?</div>
+    </div>
+
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="Escribe tu pregunta..." />
+      <button onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+
+  <script>
+    // 🔗 Tu URL de Apps Script (reemplaza con la tuya)
+    const API_URL = "https://script.google.com/macros/s/AKfycbyWbJEYFKgyEYtUDQ8jWpsA_kZ0h3alSs2RsffS_VCnLQItG_AX5cXy4k4mOligQxUKcA/exec";
+
+    const messagesDiv = document.getElementById("messages");
+    const input = document.getElementById("userInput");
+
+    function addMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.classList.add("message", sender);
+      msg.textContent = text;
+      messagesDiv.appendChild(msg);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function showTyping() {
+      const typing = document.createElement("div");
+      typing.classList.add("message", "bot", "typing");
+      typing.textContent = "Escribiendo...";
+      typing.id = "typing";
+      messagesDiv.appendChild(typing);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function hideTyping() {
+      const typing = document.getElementById("typing");
+      if (typing) typing.remove();
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      input.value = "";
+      showTyping();
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+
+        const data = await response.json();
+
+        hideTyping();
+        if (data.reply) {
+          addMessage(data.reply, "bot");
+        } else {
+          addMessage("Lo siento, no pude procesar tu pregunta.", "bot");
+        }
+      } catch (err) {
+        hideTyping();
+        addMessage("Error de conexión. Intenta de nuevo.", "bot");
+      }
+    }
+
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
+</body>
+</html>
