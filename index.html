@@ -27,22 +27,8 @@
     }
 
     header {
-      background: linear-gradient(135deg, var(--negro) 0%, var(--dorado) 100%);
-      color: var(--blanco);
-      padding: 2rem 5%;
-      text-align: center;
-      position: relative;
-    }
-
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    header p {
-      font-size: 1.2rem;
-      max-width: 800px;
-      margin: 0 auto;
+      padding: 0;
+      margin: 0;
     }
 
     .carnaval-figure-link {
@@ -171,29 +157,48 @@
       font-size: 0.9rem;
     }
 
+    .logos-aliados {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: center;
+      margin: 1.5rem 0;
+    }
+
+    .logos-aliados img {
+      height: 60px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
     @media (max-width: 768px) {
       .carnaval-figure-link {
         width: 120px;
         right: 10px;
         bottom: 10px;
       }
-      header h1 { font-size: 2rem; }
       #map { height: 300px; }
+      .logos-aliados img {
+        height: 50px;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- Banner personalizado -->
   <header>
-    <h1>🎨 Carnaval Verde</h1>
-    <p>Recicla, Juega, Celebra — Un Carnaval de Negros y Blancos más sostenible</p>
+    <img src="https://i.postimg.cc/fLxMgf1g/banner.jpg" 
+         alt="Carnaval Verde - Recicla, Juega, Celebra" 
+         style="width: 100%; height: auto; display: block; border-radius: 0 0 16px 16px;">
   </header>
 
   <!-- Imagen flotante como enlace al chatbot -->
   <a href="https://script.google.com/macros/s/AKfycby8nTk4LagCVM_HycM8kjtCObywsg_FkNqhYRFreMaSuhjM8edCpmGMb1DGgkdzsCHwiw/exec" 
      target="_blank" 
      class="carnaval-figure-link">
-    <img src="https://i.postimg.cc/Pf6gkBKV/personaje1.png" alt="Asistente del Carnaval Verde" style="width:100%; display:block;">
+    <img src="https://i.postimg.cc/WpGFYv1X/personaje.png" alt="Asistente del Carnaval Verde" style="width:100%; display:block;">
   </a>
 
   <main>
@@ -245,7 +250,7 @@
       <div class="metricas">
         <div class="metrica-item">
           <span class="metrica-num" id="botellas">0</span>
-          Botellas recicladas
+          Plásticos reciclados
         </div>
         <div class="metrica-item">
           <span class="metrica-num" id="usuarios">0</span>
@@ -267,6 +272,12 @@
   </main>
 
   <footer>
+    <h3 style="color: #333; margin-bottom: 1rem; font-size: 1.2rem;">Aliados Estratégicos</h3>
+    <div class="logos-aliados">
+      <img src="https://www.pasto.gov.co/images/estaticas/escudo_pasto.jpg" alt="Alcaldía de Pasto">
+      <img src="https://i.postimg.cc/T2JtTWxT/talento.png" alt="Talento Pastuso">
+      <img src="https://i.postimg.cc/5tJH9j18/464433359-8564713953564702-8866735301080393740-n.png" alt="Carnaval de Negros y Blancos">
+    </div>
     <p>Proyecto ciudadano en alianza con la Alcaldía de Pasto, ONGs ambientales y la comunidad del Carnaval de Negros y Blancos.</p>
     <p>© 2025 Carnaval Verde – Patrimonio Cultural + Sostenibilidad</p>
   </footer>
