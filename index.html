@@ -45,7 +45,6 @@
       margin: 0 auto;
     }
 
-    /* Imagen flotante como enlace */
     .carnaval-figure-link {
       position: fixed;
       right: 20px;
@@ -158,6 +157,13 @@
       transform: scale(1.05);
     }
 
+    #map {
+      width: 100%;
+      height: 400px;
+      border-radius: 12px;
+      margin-top: 1rem;
+    }
+
     footer {
       text-align: center;
       padding: 2rem;
@@ -172,6 +178,7 @@
         bottom: 10px;
       }
       header h1 { font-size: 2rem; }
+      #map { height: 300px; }
     }
   </style>
 </head>
@@ -186,7 +193,7 @@
   <a href="https://script.google.com/macros/s/AKfycby8nTk4LagCVM_HycM8kjtCObywsg_FkNqhYRFreMaSuhjM8edCpmGMb1DGgkdzsCHwiw/exec" 
      target="_blank" 
      class="carnaval-figure-link">
-    <img src="https://i.postimg.cc/wTfbSLqF/personaje1.png" alt="Asistente del Carnaval Verde" style="width:100%; display:block;">
+    <img src="https://i.postimg.cc/Pf6gkBKV/personaje1.png" alt="Asistente del Carnaval Verde" style="width:100%; display:block;">
   </a>
 
   <main>
@@ -208,17 +215,11 @@
       </div>
     </section>
 
+    <!-- Mapa con iconos de reciclaje -->
     <section>
-      <h2>Puntos de Recolección</h2>
-      <p style="margin-bottom: 1rem;">Ubicaciones estratégicas en el centro de Pasto:</p>
-      <iframe 
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.784754888316!2d-77.28328682511218!3d1.213340162204588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e2d0b3b7a9e9f9f%3A0x5f5e5b5b5b5b5b5b!2sPlaza%20de%20Nari%C3%B1o%2C%20Pasto!5e0!3m2!1ses!2sco!4v1710000000000!5m2!1ses!2sco" 
-        width="100%" 
-        height="300" 
-        style="border:0; border-radius:12px;" 
-        allowfullscreen="" 
-        loading="lazy">
-      </iframe>
+      <h2>Puntos de Recolección y Máquinas de Reciclaje Inverso</h2>
+      <p>Ubicaciones estratégicas en Pasto durante el carnaval:</p>
+      <div id="map"></div>
     </section>
 
     <section>
@@ -271,9 +272,53 @@
   </footer>
 
   <script>
-    // URL de tu PWA (ajusta si usas otro hosting)
+    // === MAPA CON ICONOS DE RECICLAJE ===
+    function initMap() {
+      const pasto = { lat: 1.2133, lng: -77.2833 };
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 14,
+        center: pasto,
+        styles: [
+          { "featureType": "poi", "stylers": [{ "visibility": "off" }] }
+        ]
+      });
+
+      const reciclajeIcon = {
+        url: "https://cdn-icons-png.flaticon.com/512/3713/3713557.png",
+        scaledSize: new google.maps.Size(40, 40),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(20, 40)
+      };
+
+      const puntos = [
+        { nombre: "Plaza de Nariño", lat: 1.2133, lng: -77.2833 },
+        { nombre: "Parque del Carnaval", lat: 1.2180, lng: -77.2870 },
+        { nombre: "Calle Real", lat: 1.2100, lng: -77.2800 },
+        { nombre: "Estadio Departamental", lat: 1.2250, lng: -77.2900 },
+        { nombre: "Terminal de Transportes", lat: 1.2050, lng: -77.2750 }
+      ];
+
+      puntos.forEach(punto => {
+        new google.maps.Marker({
+          position: { lat: punto.lat, lng: punto.lng },
+          map: map,
+          icon: reciclajeIcon,
+          title: punto.nombre
+        });
+      });
+    }
+
+    // Cargar Google Maps con tu clave
+    document.addEventListener("DOMContentLoaded", () => {
+      const script = document.createElement("script");
+      script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyClxCdG2ONYwHJr0ElwPjjdECmYJD5YfTU&callback=initMap";
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    });
+
+    // === QR y métricas ===
     const appUrl = "https://jbetancourtromo.github.io/carnavalverde/carnavalverdepwa.html";
-    
     new QRCode(document.getElementById("qrcode"), {
       text: appUrl,
       width: 180,
@@ -281,7 +326,6 @@
     });
     document.getElementById("appLink").href = appUrl;
 
-    // Métricas simuladas
     setInterval(() => {
       document.getElementById("botellas").textContent = Math.floor(Math.random() * 5000) + 1000;
       document.getElementById("usuarios").textContent = Math.floor(Math.random() * 1000) + 300;
