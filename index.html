@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carnaval Verde – Recicla, Juega, Celebra</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      --negro: #000000;
+      --blanco: #ffffff;
+      --dorado: #d4af37;
+      --rojo: #c1272d;
+      --gris: #f5f5f5;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--gris);
+      color: var(--negro);
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--negro) 0%, var(--dorado) 100%);
+      color: var(--blanco);
+      padding: 2rem 5%;
+      text-align: center;
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .carnaval-figure {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 180px;
+      z-index: 1000;
+      animation: float 4s ease-in-out infinite;
+      cursor: pointer;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    main {
+      padding: 2rem 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    section {
+      background: var(--blanco);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      color: var(--negro);
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      border-bottom: 3px solid var(--dorado);
+      padding-bottom: 0.5rem;
+      display: inline-block;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .card {
+      flex: 1 1 300px;
+      background: #f9f9f9;
+      padding: 1.5rem;
+      border-radius: 12px;
+      border-left: 4px solid var(--rojo);
+    }
+
+    .metricas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    .metrica-item {
+      background: var(--negro);
+      color: var(--blanco);
+      padding: 1.2rem;
+      border-radius: 12px;
+    }
+
+    .metrica-num {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--dorado);
+      display: block;
+    }
+
+    .app-cta {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(to right, var(--dorado), var(--rojo));
+      color: white;
+      border-radius: 16px;
+      margin: 2rem 0;
+    }
+
+    .app-cta h2 {
+      color: white;
+      border: none;
+    }
+
+    #qrcode {
+      margin: 1.5rem auto;
+      width: 180px;
+      height: 180px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--negro);
+      color: var(--blanco);
+      padding: 12px 28px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 1rem;
+      transition: transform 0.2s;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .carnaval-figure {
+        width: 120px;
+        right: 10px;
+        bottom: 10px;
+      }
+      header h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎨 Carnaval Verde</h1>
+    <p>Recicla, Juega, Celebra — Un Carnaval de Negros y Blancos más sostenible</p>
+  </header>
+
+  <img src="https://i.postimg.cc/gcXvfcyb/figura.png" alt="Embajador del Carnaval Verde" class="carnaval-figure" id="embajador">
+
+  <main>
+    <section>
+      <h2>¿Cómo funciona?</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>1. Entrega tus residuos</h3>
+          <p>Acércate a cualquier Punto Verde del carnaval y entrega plásticos, latas, vidrio o espuma.</p>
+        </div>
+        <div class="card">
+          <h3>2. Escanea tu código</h3>
+          <p>Recibe un código único y regístralo en la app móvil oficial.</p>
+        </div>
+        <div class="card">
+          <h3>3. Gana puntos y premios</h3>
+          <p>Canjea entradas, souvenirs o artesanías. ¡Y aprende sobre tu impacto ambiental!</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Puntos de Recolección</h2>
+      <p style="margin-bottom: 1rem;">Ubicaciones estratégicas en el centro de Pasto:</p>
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.784754888316!2d-77.28328682511218!3d1.213340162204588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e2d0b3b7a9e9f9f%3A0x5f5e5b5b5b5b5b5b!2sPlaza%20de%20Nari%C3%B1o%2C%20Pasto!5e0!3m2!1ses!2sco!4v1710000000000!5m2!1ses!2sco" 
+        width="100%" 
+        height="300" 
+        style="border:0; border-radius:12px;" 
+        allowfullscreen="" 
+        loading="lazy">
+      </iframe>
+    </section>
+
+    <section>
+      <h2>Recompensas Disponibles</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>🎟️ Entradas a conciertos</h3>
+          <p>500 puntos</p>
+        </div>
+        <div class="card">
+          <h3>👕 Camiseta oficial</h3>
+          <p>300 puntos</p>
+        </div>
+        <div class="card">
+          <h3>🎁 Llavero artesanal</h3>
+          <p>100 puntos</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Impacto en Tiempo Real</h2>
+      <div class="metricas">
+        <div class="metrica-item">
+          <span class="metrica-num" id="botellas">0</span>
+          Botellas recicladas
+        </div>
+        <div class="metrica-item">
+          <span class="metrica-num" id="usuarios">0</span>
+          Participantes
+        </div>
+        <div class="metrica-item">
+          <span class="metrica-num" id="co2">0</span>
+          kg CO₂ evitados
+        </div>
+      </div>
+    </section>
+
+    <div class="app-cta">
+      <h2>¡Participa con la App Móvil!</h2>
+      <p>Escanea el código QR o haz clic abajo para usar la app oficial del Carnaval Verde.</p>
+      <div id="qrcode"></div>
+      <a href="https://github.com/jbetancourtromo/carnaval-verde-pwa.html" class="btn" id="appLink">Abrir App Móvil</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Proyecto ciudadano en alianza con la Alcaldía de Pasto, ONGs ambientales y la comunidad del Carnaval de Negros y Blancos.</p>
+    <p>© 2025 Carnaval Verde – Patrimonio Cultural + Sostenibilidad</p>
+  </footer>
+
+  <script>
+    // ⚠️ ¡REEMPLAZA ESTA URL POR LA DE TU PWA EN GITHUB PAGES!
+    const appUrl = "https://github.com/jbetancourtromo/carnaval-verde-pwa.html";
+    
+    new QRCode(document.getElementById("qrcode"), {
+      text: appUrl,
+      width: 180,
+      height: 180
+    });
+    document.getElementById("appLink").href = appUrl;
+
+    setInterval(() => {
+      document.getElementById("botellas").textContent = Math.floor(Math.random() * 5000) + 1000;
+      document.getElementById("usuarios").textContent = Math.floor(Math.random() * 1000) + 300;
+      document.getElementById("co2").textContent = Math.floor(Math.random() * 2000) + 500;
+    }, 5000);
+
+    document.getElementById("embajador").addEventListener("click", () => {
+      const mensajes = [
+        "¡Cada botella que reciclas limpia las calles de Pasto!",
+        "El aluminio se recicla al 100%. ¡No lo tires!",
+        "¿Sabías que el vidrio tarda 4,000 años en degradarse? Pero tú puedes darle una segunda vida.",
+        "¡Gracias por ser parte del Carnaval Verde! 🌱"
+      ];
+      alert(mensajes[Math.floor(Math.random() * mensajes.length)]);
+    });
+  </script>
+</body>
+</html>
