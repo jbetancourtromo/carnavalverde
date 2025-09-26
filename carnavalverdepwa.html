@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carnaval Verde - App Móvil</title>
+  <meta name="description" content="Recicla en el Carnaval de Negros y Blancos y gana premios">
+  <meta name="theme-color" content="#d4af37">
+  <link rel="manifest" href="#">
+
+  <style>
+    :root {
+      --negro: #000000;
+      --blanco: #ffffff;
+      --dorado: #d4af37;
+      --rojo: #c1272d;
+      --gris: #f0f0f9;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #fff 60%, var(--gris) 100%);
+      color: var(--negro);
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      color: var(--negro);
+    }
+
+    header p {
+      color: #555;
+      margin-top: 8px;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin: 0 auto 16px;
+      display: block;
+      border-radius: 50%;
+      background: white;
+      padding: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+    }
+
+    button {
+      background: var(--dorado);
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #b8972a;
+    }
+
+    #qrButton {
+      background: var(--rojo);
+    }
+
+    #qrButton:hover {
+      background: #a02025;
+    }
+
+    #result {
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .success {
+      background: #e6f4ea;
+      border-left: 4px solid #34a853;
+      color: #1e6f30;
+    }
+
+    .error {
+      background: #fce8e6;
+      border-left: 4px solid #ea4335;
+      color: #9a3b38;
+    }
+
+    .points {
+      font-weight: bold;
+      color: var(--dorado);
+      font-size: 1.2rem;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #777;
+      font-size: 0.85rem;
+    }
+
+    #scanner {
+      display: none;
+      width: 100%;
+      height: 200px;
+      margin: 10px 0;
+      border: 2px dashed #ccc;
+      border-radius: 12px;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(212,175,55,0.3);
+      border-radius: 50%;
+      border-top-color: var(--dorado);
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://i.postimg.cc/WpGFYv1X/personaje.png" alt="Carnaval Verde" class="logo">
+    <h1>📱 Carnaval Verde</h1>
+    <p>Recicla • Gana puntos • Celebra sostenible</p>
+  </header>
+
+  <main>
+    <!-- Perfil del usuario -->
+    <div class="card">
+      <h2>👤 Mi Carnaval Verde</h2>
+      <p><strong>ID de usuario:</strong> <span id="userIdDisplay"></span></p>
+      <button onclick="copyUserId()" style="background:#4A90E2; margin-top:10px;">Copiar mi ID</button>
+      <p style="font-size:0.85rem; margin-top:10px; color:#666;">
+        Guárdalo por si usas otro celular. Con él recuperas tus puntos.
+      </p>
+    </div>
+
+    <!-- Formulario de código -->
+    <div class="card">
+      <h2>Ingresa tu código de reciclaje</h2>
+      <p>Lo recibiste en un Punto Verde del carnaval.</p>
+      <input type="text" id="codeInput" placeholder="Ej: PET-A1B2, VID-E5F6" maxlength="12" />
+      <button onclick="validateCode()">Validar código</button>
+      <button id="qrButton" onclick="toggleScanner()">Escanear QR</button>
+      <div id="scanner"></div>
+      <div id="result"></div>
+    </div>
+
+    <div class="card">
+      <h2>Tus puntos</h2>
+      <p class="points" id="totalPoints">Cargando...</p>
+      <p>Puedes canjearlos por entradas, camisetas y más.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Proyecto del Carnaval de Negros y Blancos • Pasto, Nariño</p>
+  </footer>
+
+  <!-- Librería para QR -->
+  <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+  <script>
+    // 🔗 Tu URL de Apps Script (¡NO la cambies!)
+    const API_URL = "https://script.google.com/macros/s/AKfycbxMzKxp4PKwzbvvGx286flNXGT6hJwfle-HTT3J_pXTArvlx4vcV9DF99pTcq_olJ3vZg/exec";
+
+    // Generar o recuperar user_id
+    if (!localStorage.getItem('carnaval_user_id')) {
+      const userId = 'USR-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+      localStorage.setItem('carnaval_user_id', userId);
+    }
+    const userId = localStorage.getItem('carnaval_user_id');
+
+    // Mostrar ID al cargar
+    document.getElementById('userIdDisplay').textContent = userId;
+
+    // Cargar puntos actuales
+    function loadPoints() {
+      fetch(`${API_URL}?action=getUser&user_id=${encodeURIComponent(userId)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById('totalPoints').textContent = data.puntos_totales + ' pts';
+          } else {
+            document.getElementById('totalPoints').textContent = '0 pts';
+          }
+        })
+        .catch(() => {
+          document.getElementById('totalPoints').textContent = '0 pts';
+        });
+    }
+    loadPoints();
+
+    function copyUserId() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(userId).then(() => {
+          alert("¡ID copiado! Guárdalo en tus notas.");
+        }).catch(() => {
+          fallbackCopy();
+        });
+      } else {
+        fallbackCopy();
+      }
+    }
+
+    function fallbackCopy() {
+      const el = document.createElement('textarea');
+      el.value = userId;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      alert("ID copiado: " + userId);
+    }
+
+    function validateCode() {
+      const code = document.getElementById('codeInput').value.trim().toUpperCase();
+      if (!code) return showError("Por favor ingresa un código.");
+
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '<div class="loading"></div> Validando...';
+      resultDiv.className = '';
+      resultDiv.style.display = 'block';
+
+      fetch(`${API_URL}?codigo=${encodeURIComponent(code)}&user_id=${encodeURIComponent(userId)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            showResult(`
+              🎉 ¡Código válido!<br>
+              Recibiste <strong>${data.puntos_otorgados} puntos</strong> por reciclar:<br>
+              <strong>${data.residuo.name}</strong><br><br>
+              ⏳ Este material tarda <strong>${data.residuo.degradacion}</strong> en degradarse.<br>
+              💡 ${data.residuo.impacto}<br><br>
+              ¡Gracias por cuidar el Carnaval y Pasto! 🌱
+            `, 'success');
+            document.getElementById('totalPoints').textContent = data.puntos_totales + ' pts';
+          } else {
+            showError(data.message || "Error al validar el código.");
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          showError("No se pudo conectar. Revisa tu internet.");
+        });
+    }
+
+    function showError(msg) {
+      showResult(msg, 'error');
+    }
+
+    function showResult(html, type) {
+      const el = document.getElementById('result');
+      el.innerHTML = html;
+      el.className = type;
+      el.style.display = 'block';
+    }
+
+    // Escaneo QR
+    let html5QrCode = null;
+    function toggleScanner() {
+      const scanner = document.getElementById('scanner');
+      const btn = document.getElementById('qrButton');
+
+      if (scanner.style.display === 'none' || !scanner.style.display) {
+        scanner.style.display = 'block';
+        btn.textContent = 'Cancelar escaneo';
+
+        if (!html5QrCode) {
+          html5QrCode = new Html5Qrcode("scanner");
+          html5QrCode.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: { width: 200, height: 200 } },
+            (decodedText) => {
+              document.getElementById('codeInput').value = decodedText;
+              html5QrCode.stop().then(() => {
+                scanner.style.display = 'none';
+                btn.textContent = 'Escanear QR';
+              });
+              validateCode();
+            },
+            (errorMessage) => {}
+          ).catch(err => {
+            showError("Cámara no disponible. Ingresa el código manualmente.");
+            scanner.style.display = 'none';
+            btn.textContent = 'Escanear QR';
+          });
+        }
+      } else {
+        html5QrCode?.stop().then(() => {
+          scanner.style.display = 'none';
+          btn.textContent = 'Escanear QR';
+        });
+      }
+    }
+  </script>
+</body>
+</html>
